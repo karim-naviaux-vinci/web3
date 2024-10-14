@@ -1,26 +1,46 @@
-import React, {useState} from 'react'
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
 
-const ClickCounter = ({title, message}) => {
-    const [count, setCount] = useState(0)
-    const [showMessage, setShowMessage] = useState(false)
+const ClickCounter = ({ title, message }) => {
+  // Récupérer la valeur du compteur depuis localStorage ou utiliser 0 par défaut
+  const storedCount = JSON.parse(localStorage.getItem('count') || '0');
 
-    const handleClick = () => {
-        if (count === 10) {
-            setShowMessage(true)
-        }
+  // Initialisation du state avec la valeur du compteur récupérée ou 0
+  const [count, setCount] = useState(storedCount);
+  const [showMessage, setShowMessage] = useState(false);
 
-        setCount(count + 1)
-    }
+  // Fonction de gestion du clic
+  const handleClick = () => {
+    const newCount = count + 1;
+    setCount(newCount);
+    localStorage.setItem('count', JSON.stringify(newCount));
+  };
 
-    return (
-        <div>
-            <h1>{title}</h1>
-            <button onClick={handleClick}>
-                count is {count}
-            </button>
-            <p>{showMessage ? message : ""}</p>
-        </div>
-    )
-}
+  // Fonction pour l'entrée de la souris
+  const handleMouseEnter = () => {
+    setShowMessage(true);
+  };
 
-export default ClickCounter
+  // Fonction pour la sortie de la souris
+  const handleMouseLeave = () => {
+    setShowMessage(false);
+  };
+
+  return (
+    <div>
+      <h1>{title}</h1>
+      <button
+        onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        count is {count}
+      </button>
+      {/* Si showMessage est vrai, alors afficher le paragraphe */}
+      {showMessage && <p>{message}</p>}
+    </div>
+  );
+};
+
+export default ClickCounter;
